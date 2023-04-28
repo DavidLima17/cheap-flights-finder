@@ -1,3 +1,5 @@
+import smtplib
+
 from twilio.rest import Client
 import os
 
@@ -5,6 +7,9 @@ ACCOUNT_SID = os.environ.get("TWILIO_SID")
 ACCOUNT_TOKEN = os.environ.get("TWILIO_TOKEN")
 OUTGOING_NUMBER = os.environ.get("TWILIO_NUMBER")
 RECEIVING_NUMBER = os.environ.get("TWILIO_CONTACT")
+
+MY_EMAIL = "david.lima17@gmail.com"
+PASSWORD = "tvbalwajhpmschsu"
 
 
 class NotificationManager:
@@ -26,3 +31,20 @@ class NotificationManager:
 
         # confirm message sent in console
         print(message.sid)
+
+    def send_emails(self, emails, message):
+        """
+        sends the user an email alerting them of flight deals
+        :param emails: string of the users email
+        :param message: string of the message to send user
+        :return:
+        """
+        with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+            connection.starttls()
+            connection.login(MY_EMAIL, PASSWORD)
+            for email in emails:
+                connection.sendmail(
+                    from_addr=MY_EMAIL,
+                    to_addrs=email,
+                    msg=f"Subject:New Low Price Flight!\n\n{message}".encode('utf-8')
+                )

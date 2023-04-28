@@ -45,5 +45,14 @@ class DataManager:
                 "email": email
             }
         }
-        response = requests.post(url=os.environ.get("SHEETY_USER_ENDPOINT"), json=params)
-        print(response.text)
+        requests.post(url=os.environ.get("SHEETY_USER_ENDPOINT"), json=params)
+
+    def get_user_emails(self):
+        """
+        Grabs all the emails from the Google sheet for registered users
+        :return: a collection of user information
+        """
+        response = requests.get(url=os.environ.get("SHEETY_USER_ENDPOINT"))
+        data = response.json()
+        self.user_data = data["users"]
+        return self.user_data
